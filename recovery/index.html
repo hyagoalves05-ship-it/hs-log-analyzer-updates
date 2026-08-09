@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src https://rvczmoazhlgwjgfhzppf.supabase.co; base-uri 'none'; form-action 'none'">
+  <title>Nova senha · HS LOG Analyzer</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:#f3f5f6;color:#20262c;font-family:Arial,sans-serif}.card{width:min(430px,100%);padding:28px;border:1px solid #e0e4e7;border-radius:18px;background:#fff;box-shadow:0 22px 70px rgba(25,39,52,.13)}.brand{padding-bottom:15px;border-bottom:3px solid #f26a00;color:#e55f08;font-weight:800}h1{margin:22px 0 7px;font-size:23px}p{color:#6d7780;font-size:13px;line-height:1.55}label{display:grid;gap:6px;margin-top:15px;color:#5d6871;font-size:11px;font-weight:700}input{width:100%;border:1px solid #d7dde1;border-radius:9px;padding:12px;font-size:14px}button{width:100%;margin-top:18px;border:0;border-radius:9px;background:#f26a00;color:#fff;padding:12px;font-weight:800;cursor:pointer}button:disabled{cursor:wait;opacity:.65}.message{display:none;margin-top:15px;border-radius:8px;padding:10px;font-size:12px}.ok{display:block;background:#edf9f2;color:#286c45}.error{display:block;background:#fff1ed;color:#9f3e29}
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="brand">HS LOG Analyzer</div>
+    <h1>Defina uma nova senha</h1>
+    <p>Digite uma senha com pelo menos oito caracteres. Depois, volte ao aplicativo e faça o login.</p>
+    <form id="form">
+      <label>Nova senha<input id="password" type="password" minlength="8" required autocomplete="new-password"></label>
+      <label>Confirme a senha<input id="confirmation" type="password" minlength="8" required autocomplete="new-password"></label>
+      <button id="submit" type="submit">Salvar nova senha</button>
+    </form>
+    <p id="message" class="message"></p>
+  </main>
+  <script>
+    const apiBase='https://rvczmoazhlgwjgfhzppf.supabase.co/functions/v1/license-api';
+    const params=new URLSearchParams(location.hash.slice(1));
+    const accessToken=params.get('access_token');
+    history.replaceState(null,'',location.pathname);
+    const form=document.getElementById('form');
+    const message=document.getElementById('message');
+    const submit=document.getElementById('submit');
+    if(!accessToken){
+      form.style.display='none';
+      message.className='message error';
+      message.textContent='Este link expirou ou é inválido. Solicite uma nova recuperação no aplicativo.';
+    }
+    form.addEventListener('submit',async(event)=>{
+      event.preventDefault();
+      message.className='message';
+      const password=document.getElementById('password').value;
+      const confirmation=document.getElementById('confirmation').value;
+      if(password!==confirmation){
+        message.className='message error';
+        message.textContent='As senhas não são iguais.';
+        return;
+      }
+      submit.disabled=true;
+      try{
+        const response=await fetch(apiBase+'/v1/auth/complete-password-reset',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({accessToken,password})
+        });
+        const payload=await response.json();
+        if(!response.ok)throw new Error(payload.error||'Não foi possível alterar a senha.');
+        form.style.display='none';
+        message.className='message ok';
+        message.textContent='Senha alterada. Você já pode voltar ao HS LOG Analyzer e entrar.';
+      }catch(error){
+        submit.disabled=false;
+        message.className='message error';
+        message.textContent=error instanceof Error?error.message:'Não foi possível alterar a senha.';
+      }
+    });
+  </script>
+</body>
+</html>
