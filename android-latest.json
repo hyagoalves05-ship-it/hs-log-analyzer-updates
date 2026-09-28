@@ -1,5 +1,11 @@
 {
-  "version": "0.48.6",
-  "notes": "Versão pública Android com correções de rolagem, Voo 3D, manual integrado e geração de PDF.",
-  "downloadUrl": "https://github.com/hyagoalves05-ship-it/hs-log-analyzer-updates/releases/latest"
+  "version": "0.50.8",
+  "versionCode": 50008,
+  "notes": "HS LOG Analyzer Android v0.50.8 — paridade com a base Desktop e atualização online.",
+  "downloadUrl": "https://github.com/hyagoalves05-ship-it/hs-log-analyzer-updates/releases/download/android-v0.50.8/HS-LOG-Analyzer-Android-v0.50.8.apk",
+  "assetName": "HS-LOG-Analyzer-Android-v0.50.8.apk",
+  "sha256": "e6f66a2741d35cb0315400b49d5d89207a4afba0ec06b27d6fc873fac9f374b7",
+  "size": 20137774,
+  "minSdkVersion": 24,
+  "publishedAt": "2026-09-28T17:43:05.720Z"
 }
