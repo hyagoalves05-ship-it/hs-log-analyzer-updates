@@ -4,19 +4,51 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self' https://api.github.com; base-uri 'none'; form-action 'none'">
   <title>E-mail confirmado · HS LOG Analyzer</title>
   <style>
-    *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:#f3f5f6;color:#20262c;font-family:Arial,sans-serif}.card{width:min(480px,100%);padding:30px;border:1px solid #e0e4e7;border-radius:18px;background:#fff;box-shadow:0 22px 70px rgba(25,39,52,.13)}.brand{padding-bottom:15px;border-bottom:3px solid #f26a00;color:#e55f08;font-weight:800}h1{margin:22px 0 8px;font-size:24px}p{margin:0;color:#68747d;font-size:14px;line-height:1.65}.ok{margin-top:18px;border-radius:10px;background:#edf9f2;padding:12px;color:#286c45;font-weight:700}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:#111;color:#f1f1f1;font-family:Arial,sans-serif}.card{width:min(520px,100%);padding:30px;border:1px solid #3a3a3a;border-radius:18px;background:#1a1a1a;box-shadow:0 22px 70px rgba(0,0,0,.34)}.brand{padding-bottom:15px;border-bottom:3px solid #f26a00;color:#ff7a18;font-weight:800}h1{margin:22px 0 8px;font-size:24px}p{margin:0;color:#aaa;font-size:14px;line-height:1.65}.ok{margin-top:18px;border:1px solid #285b43;border-radius:10px;background:#162b20;padding:12px;color:#8fd4aa;font-weight:700}.downloadBlock{margin-top:22px;border-top:1px solid #343434;padding-top:18px}.downloadBlock strong{display:block;margin-bottom:6px;font-size:14px}.downloadBlock>span{display:block;margin-bottom:13px;color:#9b9b9b;font-size:12px;line-height:1.5}.actions{display:grid;gap:9px}.button{display:flex;align-items:center;justify-content:center;min-height:43px;border:1px solid #4a4a4a;border-radius:9px;background:#242424;color:#f4f4f4;text-decoration:none;font-size:12px;font-weight:800}.button.primary{border-color:#f26a00;background:#f26a00;color:#fff}.button[data-loading="true"]{pointer-events:none;opacity:.62}.hint{margin-top:11px!important;color:#777!important;font-size:10px!important}
   </style>
 </head>
 <body>
   <main class="card">
     <div class="brand">HS LOG Analyzer</div>
-    <h1>E-mail confirmado</h1>
-    <p>Seu endereço foi validado com segurança.</p>
-    <p class="ok">Você já pode fechar esta página, voltar ao aplicativo e entrar com sua senha.</p>
+    <h1>Seu e-mail foi validado</h1>
+    <p>Seu endereço foi confirmado com segurança.</p>
+    <p class="ok">Sua conta está pronta. Você já pode entrar no HS LOG Analyzer.</p>
+    <section class="downloadBlock" aria-label="Downloads do HS LOG Analyzer">
+      <strong>Baixe o HS LOG Analyzer</strong>
+      <span>Os botões abaixo localizam automaticamente a versão pública mais recente.</span>
+      <div class="actions">
+        <a id="windows" class="button primary" data-loading="true" href="#">Localizando versão para Windows…</a>
+        <a id="android" class="button" data-loading="true" href="#">Localizando versão para Android…</a>
+      </div>
+      <p class="hint" id="downloadStatus">Consultando o canal oficial de atualizações…</p>
+    </section>
   </main>
-  <script>if(location.hash)history.replaceState(null,'',location.pathname);</script>
+  <script>
+    if(location.hash)history.replaceState(null,'',location.pathname);
+    const repo='hyagoalves05-ship-it/hs-log-analyzer-updates';
+    const windows=document.getElementById('windows');
+    const android=document.getElementById('android');
+    const status=document.getElementById('downloadStatus');
+    const ready=(node,url,label)=>{node.href=url;node.textContent=label;node.dataset.loading='false';};
+    (async()=>{
+      const errors=[];
+      try{
+        const releases=await fetch(`https://api.github.com/repos/${repo}/releases?per_page=30`,{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('release');return r.json();});
+        const release=releases.find(item=>!item.draft&&!item.prerelease&&/^v\d/.test(item.tag_name));
+        const asset=release?.assets?.find(item=>/\.exe$/i.test(item.name));
+        if(!asset?.browser_download_url)throw new Error('windows');
+        ready(windows,asset.browser_download_url,'Baixar HS LOG Analyzer para Windows');
+      }catch{errors.push('Windows');windows.textContent='Abrir releases do Windows';windows.href=`https://github.com/${repo}/releases`;windows.dataset.loading='false';}
+      try{
+        const meta=await fetch('../android-latest.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('android');return r.json();});
+        if(!meta.downloadUrl)throw new Error('android');
+        ready(android,meta.downloadUrl,'Baixar HS LOG Analyzer para Android');
+      }catch{errors.push('Android');android.textContent='Abrir releases do Android';android.href=`https://github.com/${repo}/releases`;android.dataset.loading='false';}
+      status.textContent=errors.length?'Não foi possível resolver automaticamente: '+errors.join(' e ')+'. Use os botões para abrir os releases.':'Links atualizados para as versões públicas mais recentes.';
+    })();
+  </script>
 </body>
 </html>
