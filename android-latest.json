@@ -1,11 +1,11 @@
 {
-  "version": "0.50.13",
-  "versionCode": 50013,
-  "notes": "HS LOG Analyzer Android v0.50.13 — paridade com a base Desktop e atualização online.",
-  "downloadUrl": "https://github.com/hyagoalves05-ship-it/hs-log-analyzer-updates/releases/download/android-v0.50.13/HS-LOG-Analyzer-Android-v0.50.13.apk",
-  "assetName": "HS-LOG-Analyzer-Android-v0.50.13.apk",
-  "sha256": "6d39c0cfc3cb24a793e4c28a646b22ceb2e505a8f54f1eb37ef3b9bdd06e50e7",
-  "size": 20166446,
+  "version": "0.50.14",
+  "versionCode": 50014,
+  "notes": "HS LOG Analyzer Android v0.50.14 — paridade com a base Desktop e atualização online.",
+  "downloadUrl": "https://github.com/hyagoalves05-ship-it/hs-log-analyzer-updates/releases/download/android-v0.50.14/HS-LOG-Analyzer-Android-v0.50.14.apk",
+  "assetName": "HS-LOG-Analyzer-Android-v0.50.14.apk",
+  "sha256": "1afac5299e32705508748475c858c572c73dfdf8b92c3b81cd0bf9017928b860",
+  "size": 20313958,
   "minSdkVersion": 24,
-  "publishedAt": "2026-10-28T14:38:40.003Z"
+  "publishedAt": "2026-10-28T17:05:09.829Z"
 }
